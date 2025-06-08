@@ -1,234 +1,13 @@
 # System Design Notes
 
-<<<<<<< codex/create-solid-principles-notes-in-readme.md
-This repository collects notes about system design and software architecture. Over time it will expand with topics such as design patterns and scalability. The first section focuses on building an intuitive understanding of the **SOLID** principles.
-
-## Why SOLID?
-
-* Encourages modular and maintainable code
-* Makes future changes easier to introduce
-* Enables better testability and separation of concerns
-
-## The SOLID Design Principles
-
-The best way to learn these principles is to examine common problems and then see how SOLID provides a solution. Each section begins with a problematic example and finishes with an improved approach in Java.
-
-### 1. Single Responsibility Principle (SRP)
-
-**Problem**
-When a class tries to handle multiple concerns, one change can accidentally break another feature:
-
-```java
-class InvoiceService {
-    void createInvoice(Order order) { /* create and save invoice */ }
-    double calculateTax(Order order) { /* compute tax */ }
-}
-```
-
-**Solution**
-Split the logic so that each class has one reason to change:
-
-```java
-class InvoiceCalculator {
-    double calculateTax(Order order) { /* ... */ }
-}
-
-class InvoiceRepository {
-    void save(Invoice invoice) { /* ... */ }
-}
-```
-
-* Business rules are separate from storage concerns.
-* Focused classes are easier to maintain and test.
-
-### 2. Open/Closed Principle (OCP)
-
-**Problem**
-Consider a method that computes area for multiple shapes using conditionals. Every time a new shape is added, the method must be modified:
-
-```java
-class AreaCalculator {
-    double area(Object shape) {
-        if (shape instanceof Rectangle rect) {
-            return rect.width * rect.height;
-        } else if (shape instanceof Circle circle) {
-            return Math.PI * circle.radius * circle.radius;
-        }
-        throw new IllegalArgumentException("Unknown shape");
-    }
-}
-```
-
-**Solution**
-Define an interface that each shape implements. The calculator then works with the abstraction and never needs modification:
-
-```java
-interface Shape {
-    double area();
-}
-
-class Rectangle implements Shape {
-    double width, height;
-    public double area() { return width * height; }
-}
-
-class Circle implements Shape {
-    double radius;
-    public double area() { return Math.PI * radius * radius; }
-}
-
-class AreaCalculator {
-    double area(Shape shape) { return shape.area(); }
-}
-```
-
-* New shapes are introduced by extension, not by changing existing logic.
-* Core logic remains stable as the system grows.
-
-### 3. Liskov Substitution Principle (LSP)
-
-**Problem**
-A subclass should be usable anywhere its base class is expected. The classic counterexample uses Rectangle and Square:
-
-```java
-class Rectangle {
-    protected int width, height;
-    void setWidth(int w) { width = w; }
-    void setHeight(int h) { height = h; }
-    int area() { return width * height; }
-}
-
-class Square extends Rectangle {
-    @Override
-    void setWidth(int w) { width = height = w; }
-    @Override
-    void setHeight(int h) { height = width = h; }
-}
-```
-
-Using `Square` where a `Rectangle` is expected breaks assumptions about independent width and height setters.
-
-**Solution**
-Design separate abstractions or avoid inheritance where it does not fit:
-
-```java
-interface Shape {
-    int area();
-}
-
-class BetterRectangle implements Shape {
-    private final int width, height;
-    BetterRectangle(int w, int h) { width = w; height = h; }
-    public int area() { return width * height; }
-}
-
-class Square implements Shape {
-    private final int side;
-    Square(int s) { side = s; }
-    public int area() { return side * side; }
-}
-```
-
-* Subtypes follow the expectations of the interface.
-* Clients can rely on consistent behavior across implementations.
-
-### 4. Interface Segregation Principle (ISP)
-
-**Problem**
-Large interfaces force implementations to provide methods they don't need:
-
-```java
-interface MultiFunctionDevice {
-    void print(Document d);
-    void scan(Document d);
-    void fax(Document d);
-}
-
-class BasicPrinter implements MultiFunctionDevice {
-    public void print(Document d) { /* ... */ }
-    public void scan(Document d) { /* unused */ }
-    public void fax(Document d) { /* unused */ }
-}
-```
-
-**Solution**
-Split the interface into smaller, role-specific ones:
-
-```java
-interface Printer {
-    void print(Document d);
-}
-interface Scanner {
-    void scan(Document d);
-}
-interface Fax {
-    void fax(Document d);
-}
-
-class SimplePrinter implements Printer {
-    public void print(Document d) { /* ... */ }
-}
-
-class MultiFunctionMachine implements Printer, Scanner, Fax {
-    public void print(Document d) { /* ... */ }
-    public void scan(Document d) { /* ... */ }
-    public void fax(Document d) { /* ... */ }
-}
-```
-
-* Implementers only depend on the capabilities they actually use.
-* Changes to one behavior don't impact classes that don't need it.
-
-### 5. Dependency Inversion Principle (DIP)
-
-**Problem**
-A high-level module directly instantiates its dependencies, making it hard to swap implementations or test in isolation:
-
-```java
-class EmailService {
-    void send(String msg) { /* ... */ }
-}
-
-class AlertManager {
-    private final EmailService service = new EmailService();
-    void trigger(String msg) { service.send(msg); }
-}
-```
-
-**Solution**
-Depend on abstractions and supply concrete implementations from the outside:
-
-```java
-interface NotificationService {
-    void send(String msg);
-}
-
-class EmailService implements NotificationService {
-    public void send(String msg) { /* ... */ }
-}
-
-class AlertManager {
-    private final NotificationService service;
-    AlertManager(NotificationService svc) { this.service = svc; }
-    void trigger(String msg) { service.send(msg); }
-}
-```
-
-* High-level code is decoupled from low-level details.
-* Implementations can vary (e.g., email, SMS) without changing `AlertManager`.
-
-### Final Thoughts
-
-SOLID principles act as guardrails when designing software. They are not strict rules but guidelines that help you build systems that are easier to maintain and extend. Future sections of this repository will explore additional design topics.
-=======
-This repository collects notes about system design and software architecture. The focus of this document is a detailed primer on the **SOLID** design principles.
+This repository collects notes about system design and software architecture. The first topic is a short primer on the **SOLID** design principles.
 
 ## SOLID Design Principles
 
-**SOLID** is a mnemonic for five key guidelines that encourage clean and maintainable object-oriented code.
+**SOLID** is an acronym for five guidelines that encourage clean and maintainable object-oriented code. Each principle is defined below with a brief example.
 
 ### 1. Single Responsibility Principle (SRP)
-Each class or module should have one clear purpose and only one reason to change.
+A class should have only one reason to change and focus on a single responsibility.
 
 ```java
 class Invoice {
@@ -241,7 +20,7 @@ class InvoiceRepository {
 ```
 
 ### 2. Open/Closed Principle (OCP)
-Software entities should be open for extension but closed for modification. You can introduce new behavior without altering existing source.
+Software entities should be open for extension but closed for modification. New behaviour is added by extension rather than editing existing source.
 
 ```java
 interface PaymentProcessor {
@@ -255,10 +34,10 @@ class PaypalProcessor implements PaymentProcessor { /* ... */ }
 Adding a new payment option only requires implementing the `PaymentProcessor` interface.
 
 ### 3. Liskov Substitution Principle (LSP)
-Subtypes must be substitutable for their base types without altering the desirable properties of a program.
+Objects of a superclass should be replaceable with objects of its subclasses without breaking the application.
 
 ```java
-class Bird { 
+class Bird {
     void fly() {}
 }
 
@@ -269,7 +48,7 @@ class Ostrich extends Bird { /* cannot fly */ }
 `Ostrich` violates LSP because it cannot fulfill the expectation that all `Bird` instances can fly.
 
 ### 4. Interface Segregation Principle (ISP)
-Prefer many small, client-specific interfaces over a single general-purpose interface.
+Clients should not be forced to depend on interfaces they do not use. Prefer several small, role-specific interfaces.
 
 ```java
 interface Printable {
@@ -285,10 +64,10 @@ class MultiFunctionMachine implements Printable, Scannable { /* ... */ }
 ```
 
 ### 5. Dependency Inversion Principle (DIP)
-Depend on abstractions rather than concrete implementations. High-level modules should not rely on low-level details.
+Depend on abstractions, not on concrete implementations. High-level modules should not rely on low-level details.
 
 ```java
-interface NotificationService { 
+interface NotificationService {
     void send(String message);
 }
 
@@ -311,6 +90,11 @@ By injecting the `NotificationService` interface, `AlertManager` can work with a
 
 ---
 
-These examples illustrate how SOLID principles guide the construction of flexible and testable systems. Future updates to this repository will cover other system design topics.
+## Quick Revision
+- **SRP** – one responsibility per class.
+- **OCP** – extend behaviour without modifying existing code.
+- **LSP** – subtypes must be usable in place of their base types.
+- **ISP** – favor several focused interfaces over a single general one.
+- **DIP** – depend on abstractions, not concretions.
 
->>>>>>> main
+These principles act as guardrails for building flexible and testable systems. Future updates to this repository will cover additional design topics.
