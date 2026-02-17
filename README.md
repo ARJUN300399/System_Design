@@ -2,6 +2,11 @@
 
 This repository collects notes about system design and software architecture. The first topic is a short primer on the **SOLID** design principles.
 
+
+## Complete Notes
+
+- Read the detailed guide here: [System_Design_Full_Notes.md](System_Design_Full_Notes.md)
+
 ## SOLID Design Principles
 
 **SOLID** is an acronym for five guidelines that encourage clean and maintainable object-oriented code. Each principle is defined below with a brief example.
