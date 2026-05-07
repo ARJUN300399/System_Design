@@ -1,6 +1,12 @@
 # System Design Notes
 
-This repository collects notes about system design and software architecture. The first topic is a short primer on the **SOLID** design principles.
+This repository collects notes about system design and software architecture. It is growing into a daily system design guide where each topic starts from clear mental models and moves toward production-grade tradeoffs.
+
+## Course Index
+
+| Day | Topic | File |
+| --- | --- | --- |
+| 01 | Load Balancers | [courses/load-balancers.md](courses/load-balancers.md) |
 
 ## SOLID Design Principles
 
@@ -91,10 +97,10 @@ By injecting the `NotificationService` interface, `AlertManager` can work with a
 ---
 
 ## Quick Revision
-- **SRP** – one responsibility per class.
-- **OCP** – extend behaviour without modifying existing code.
-- **LSP** – subtypes must be usable in place of their base types.
-- **ISP** – favor several focused interfaces over a single general one.
-- **DIP** – depend on abstractions, not concretions.
+- **SRP** - one responsibility per class.
+- **OCP** - extend behaviour without modifying existing code.
+- **LSP** - subtypes must be usable in place of their base types.
+- **ISP** - favor several focused interfaces over a single general one.
+- **DIP** - depend on abstractions, not concretions.
 
 These principles act as guardrails for building flexible and testable systems. Future updates to this repository will cover additional design topics.
